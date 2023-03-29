@@ -18,7 +18,8 @@ gcloud iam service-accounts create serverlessimagehandler \
 ```
 gcloud projects add-iam-policy-binding $project_id \
 --member=serviceAccount:serverlessimagehandler@$project_id.iam.gserviceaccount.com \
---role=roles/storage.objects.viewer
+--role='roles/viewer' \
+--condition=None
 ```
 
 ### Deploy Cloud Function
@@ -32,11 +33,63 @@ gcloud functions deploy serverlessimagehandler \
   --region $region
 ```
 
-### Deploy CDN
+### Deploy LB with CDN enabled
+```
+gcloud compute network-endpoint-groups create serverlessimagehandler-neg \
+    --region=$region \
+    --network-endpoint-type=serverless  \
+    --cloud-function-name=serverlessimagehandler \
+    --project=$project_id
+
+gcloud compute backend-services create serverlessimagehandler-bd \
+    --load-balancing-scheme=EXTERNAL \
+    --global \
+    --project=$project_id
+
+gcloud compute backend-services add-backend serverlessimagehandler-bd \
+    --global \
+    --network-endpoint-group=serverlessimagehandler-neg \
+    --network-endpoint-group-region=us-central1 \
+    --project=$project_id
+    
+gcloud compute url-maps create serverlessimagehandler-lb \
+    --default-service serverlessimagehandler-bd \
+    --project=$project_id
+      
+gcloud compute target-http-proxies create serverlessimagehandler-target-proxy \
+    --url-map=serverlessimagehandler-urlmap \
+    --project=$project_id
+      
+gcloud compute forwarding-rules create serverlessimagehandler-forward-rule \
+    --load-balancing-scheme=EXTERNAL \
+    --network-tier=PREMIUM \
+    --target-http-proxy=serverlessimagehandler-target-proxy \
+    --global \
+    --ports=80 \
+    --project=$project_id
 ```
 
-```
+## Test
+http://34.102.172.184?bucket=pwm-lowa&image=3jt.jpg&resize={}
+![image](https://user-images.githubusercontent.com/8756642/228536293-55b75047-794a-42ea-bad8-24b1981e5fdd.png)
+
+http://34.102.172.184?bucket=pwm-lowa&image=3jt.jpg&resize={"width":700}
+![image](https://user-images.githubusercontent.com/8756642/228536603-aa103f58-c8e7-472c-b2f1-8018024b00ce.png)
+
+
+http://34.102.172.184?bucket=pwm-lowa&image=3jt.jpg&resize={"width":400}
+![image](https://user-images.githubusercontent.com/8756642/228536694-d656745c-e8d7-4918-ba4b-f6da33a2ef7e.png)
+
 
 ## Clean
-
-https://us-central1-speedy-victory-336109.cloudfunctions.net/serverlessimagehandler?bucket=pwm-lowa&image=3jt.jpg&resize={%22width%22:300}
+```
+gcloud compute forwarding-rules delete serverlessimagehandler-forward-rule --project=$project_id --global --quiet
+gcloud compute target-http-proxies delete serverlessimagehandler-target-proxy --project=$project_id --quiet
+gcloud compute url-maps delete serverlessimagehandler-lb --project=$project_id --quiet
+gcloud compute backend-services delete serverlessimagehandler-bd --project=$project_id --global --quiet
+gcloud compute network-endpoint-groups delete serverlessimagehandler-neg --project=$project_id --region=$region --quiet
+gcloud functions delete serverlessimagehandler --project=$project_id --region=$region --quiet
+gcloud projects remove-iam-policy-binding $project_id --member=serviceAccount:serverlessimagehandler@$project_id.iam.gserviceaccount.com \
+  --role='roles/viewer'
+gcloud iam service-accounts delete serverlessimagehandler@$project_id.iam.gserviceaccount.com --project=$project_id --quiet
+```
