@@ -1,6 +1,13 @@
 # GCP Serverless Image Handler
+This solution creates a serverless architecture to initiate cost-effective image processing in the Google Cloud. The architecture combines Google Cloud services with sharp open-source image processing software and is optimized for dynamic image manipulation. You can use this solution to help you maintain high-quality images on your websites and mobile applications to drive user engagement.
 
-## Deploy
+## Benefits
+- Dynamic content delivery
+- Low-cost storage
+
+## Technical details
+
+## How to deploy
 ### Set environment variable
 ```
 export project_id=speedy-victory-336109
