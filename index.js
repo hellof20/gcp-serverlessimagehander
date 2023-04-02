@@ -8,6 +8,9 @@ exports.serverlessimagehandler = (req, res) => {
   var resize = req.query.resize
   var bucket = req.query.bucket
   var image = req.query.image
+  console.log(resize)
+  console.log(bucket)
+  console.log(image)
   let file = storage.bucket(bucket).file(image);
   file.getMetadata().then(function(data) {
     const metadata = data[0];
