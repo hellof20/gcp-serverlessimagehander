@@ -6,7 +6,7 @@ This solution creates a serverless architecture to initiate cost-effective image
 - Low-cost storage
 
 ## Technical details
-<img width="1119" alt="image" src="https://user-images.githubusercontent.com/8756642/232431733-eaa954c0-4a1c-4fa0-a275-5382068b71fb.png">
+![image](https://github.com/hellof20/gcp-serverlessimagehander/assets/8756642/f0c21338-7c87-4bcb-a450-aa0caa1579d0)
 
 - The first case: the client send request to Cloud CDN, when cache hit, returned directly from Cloud CDN
 - The second case: the client send request to Cloud CDN, when cache miss, Cloud Function will get the original image from GCS and process it through Sharp and return it to Cloud CDN，then Cloud CDN return it to the client
