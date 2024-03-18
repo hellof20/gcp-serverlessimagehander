@@ -55,6 +55,7 @@ gcloud compute network-endpoint-groups create serverlessimagehandler-neg \
 gcloud compute backend-services create serverlessimagehandler-bd \
     --load-balancing-scheme=EXTERNAL \
     --global \
+    --enable-cdn \
     --project=$project_id
 
 gcloud compute backend-services add-backend serverlessimagehandler-bd \
