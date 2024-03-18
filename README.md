@@ -68,7 +68,7 @@ gcloud compute url-maps create serverlessimagehandler-lb \
     --project=$project_id
       
 gcloud compute target-http-proxies create serverlessimagehandler-target-proxy \
-    --url-map=serverlessimagehandler-urlmap \
+    --url-map=serverlessimagehandler-lb \
     --project=$project_id
       
 gcloud compute forwarding-rules create serverlessimagehandler-forward-rule \
