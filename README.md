@@ -87,7 +87,7 @@ gcloud compute forwarding-rules create serverlessimagehandler-forward-rule \
     --project=$project_id
 ```
 
-## Test
+## Example Test
 http://34.102.172.184?bucket=pwm-lowa&image=3jt.jpg&resize={}
 ![image](https://user-images.githubusercontent.com/8756642/228536293-55b75047-794a-42ea-bad8-24b1981e5fdd.png)
 
