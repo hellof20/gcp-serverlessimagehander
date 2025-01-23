@@ -14,8 +14,14 @@ This solution creates a serverless architecture to initiate cost-effective image
 ## How to deploy
 ### Set environment variable
 ```
-export project_id=speedy-victory-336109
-export region=us-central1
+export project_id=your_project_id
+export region=region_name
+export project_num=your_project_number
+```
+
+### Enable Services
+```
+gcloud services enable cloudbuild.googleapis.com run.googleapis.com --project $project_id
 ```
 
 ### Create Service Account for Cloud Function
