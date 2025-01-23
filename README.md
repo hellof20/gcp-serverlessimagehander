@@ -24,6 +24,14 @@ export project_num=your_project_number
 gcloud services enable cloudbuild.googleapis.com run.googleapis.com --project $project_id
 ```
 
+### Add permission for default service account
+```
+gcloud projects add-iam-policy-binding $project_id \
+ --member=serviceAccount:$project_num-compute@developer.gserviceaccount.com \
+ --role=roles/cloudbuild.builds.builder \
+  --project $project_id
+```
+
 ### Create Service Account for Cloud Function
 ```
 gcloud iam service-accounts create serverlessimagehandler \
